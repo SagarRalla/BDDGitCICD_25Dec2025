@@ -55,9 +55,8 @@ jobs:
           name: Extent-Reports
           # Quote paths that have spaces; include entire folder recursively
           path: |
-            "target/Test execution Report/**/*.html"
-            "target/Test execution Report/**/screenshots/*"
-            
+            "target/Test execution Report/**/Regression_Report_amazon.html"
+
       - name: Upload Surefire Reports
         if: always()
         uses: actions/upload-artifact@v4
