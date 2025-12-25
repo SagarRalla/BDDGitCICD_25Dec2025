@@ -48,14 +48,15 @@ jobs:
             target/cucumber-reports.html
             target/cucumber-reports/cucumber-reports.html
 
-      - name: Upload Extent Reports (HTML + screenshots)
+      - name: Upload Extent Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Extent-Reports
           # Quote paths that have spaces; include entire folder recursively
           path: |
-            "target/Test execution Report/**/Regression_Report_amazon.html"
+            latest_report=$(ls -1t target/Test\ execution\ Report/*/*.html | head -n 1)
+            echo "LATEST_REPORT=$latest_report" >> $GITHUB_ENV
 
       - name: Upload Surefire Reports
         if: always()
