@@ -27,6 +27,9 @@ public class DriverManager {
             }
             coptions.addArguments("--no-sandbox");
             coptions.addArguments("--disable-gpu");
+            coptions.addArguments("--no-sandbox");
+            coptions.addArguments("--window-size=1920,1080");
+
             driver = new ChromeDriver(coptions);
         } else if (browserType.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
