@@ -32,8 +32,11 @@ jobs:
             ${{ runner.os }}-maven-
 
       # Step 4: Run tests using TestNG XML
-      - name: Run Cucumber Tests
-        run: mvn clean test
+      - name: Run Cucumber Tests (headless; keep going if tests fail)
+        run: |
+          mvn -B clean test \
+            -Dheadless=true \
+            -Dmaven.test.failure.ignore=true
 
       # Step 5: Upload Test Report
       - name: Upload Test Report
@@ -45,7 +48,7 @@ jobs:
             target/cucumber-reports.html
             target/cucumber-reports/cucumber-reports.html
 
-      - name: Upload Extent Reports
+      - name: Upload Extent Reports (HTML + screenshots)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -54,5 +57,19 @@ jobs:
           path: |
             "target/Test execution Report/**/*.html"
             "target/Test execution Report/**/screenshots/*"
+            
+      - name: Upload Surefire Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Surefire-Reports
+          path: target/surefire-reports/**
+
+      - name: Fail job if tests failed
+        if: failure()
+        run: |
+          echo "Tests failed; marking job as failed AFTER uploading artifacts."
+          exit 1
+
 
 
