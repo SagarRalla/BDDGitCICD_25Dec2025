@@ -1,0 +1,7 @@
+<suite name="CucumberSuite" verbose="1" parallel="false">
+    <test name="Amazon search Tests">
+        <classes>
+            <class name="runners.TestRunner"/>
+        </classes>
+    </test>
+</suite>
