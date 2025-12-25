@@ -6,6 +6,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
 
@@ -20,7 +21,13 @@ public class DriverManager {
         if(browserType.equalsIgnoreCase("chrome"))
         {
             WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
+            ChromeOptions coptions = new ChromeOptions();
+            if (Boolean.parseBoolean(prop.getProperty("headless", "true"))){
+                coptions.addArguments("--headless");
+            }
+            coptions.addArguments("--no-sandbox");
+            coptions.addArguments("--disable-gpu");
+            driver = new ChromeDriver(coptions);
         } else if (browserType.equalsIgnoreCase("edge")) {
             WebDriverManager.edgedriver().setup();
             driver = new EdgeDriver();
