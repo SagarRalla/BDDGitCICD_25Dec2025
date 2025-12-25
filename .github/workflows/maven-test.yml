@@ -9,15 +9,17 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     steps:
       # Step 1: Checkout code
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Set up Java
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -35,28 +37,58 @@ jobs:
       - name: Run Cucumber Tests (headless; keep going if tests fail)
         run: |
           mvn -B clean test \
+            -DsuiteXmlFile=testng.xml \
+            -Dbrowser=chrome \
             -Dheadless=true \
             -Dmaven.test.failure.ignore=true
 
-      # Step 5: Upload Test Report
-      - name: Upload Test Report
+      - name: List target folders
+        if: always()
+        run: |
+          echo "=== target ==="
+          ls -la "target" || true
+          echo "=== Test execution Report ==="
+          ls -R "target/Test execution Report" || true
+
+      - name: Find latest Extent report
+        if: always()
+        id: find_latest_extent
+        shell: bash
+        run: |
+          latest=$(ls -1t target/Test\ execution\ Report/*/*.html | head -n 1 || true)
+          if [ -n "$latest" ]; then
+            echo "LATEST_EXTENT_REPORT=$latest" >> "$GITHUB_ENV"
+            echo "Latest extent HTML: $latest"
+          else
+            echo "No Extent HTML found under target/Test execution Report/*/*.html"
+            echo "LATEST_EXTENT_REPORT=" >> "$GITHUB_ENV"
+          fi
+
+      - name: Upload Cucumber HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Test-Report
+          name: Cucumber-HTML
           path: |
             target/cucumber-reports.html
             target/cucumber-reports/cucumber-reports.html
 
-      - name: Upload Extent Reports
+      - name: Upload Extent Report (HTML only)
+        if: always() && ${{ env.LATEST_EXTENT_REPORT != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Extent-HTML
+          path: ${{ env.LATEST_EXTENT_REPORT }}
+
+      - name: Upload Extent Reports (folder)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Extent-Reports
-          # Quote paths that have spaces; include entire folder recursively
+          # Quote paths because folder name has a space; use ** for any depth
           path: |
-            latest_report=$(ls -1t target/Test\ execution\ Report/*/*.html | head -n 1)
-            echo "LATEST_REPORT=$latest_report" >> $GITHUB_ENV
+            "target/Test execution Report/**/*.html"
+            "target/Test execution Report/**/screenshots/**/*"
 
       - name: Upload Surefire Reports
         if: always()
@@ -70,6 +102,7 @@ jobs:
         run: |
           echo "Tests failed; marking job as failed AFTER uploading artifacts."
           exit 1
+
 
 
 
