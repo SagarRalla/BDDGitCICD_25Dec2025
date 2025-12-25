@@ -37,7 +37,22 @@ jobs:
 
       # Step 5: Upload Test Report
       - name: Upload Test Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Test-Report
-          path: target/cucumber-reports.html
+          path: |
+            target/cucumber-reports.html
+            target/cucumber-reports/cucumber-reports.html
+
+      - name: Upload Extent Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Extent-Reports
+          # Quote paths that have spaces; include entire folder recursively
+          path: |
+            "target/Test execution Report/**/*.html"
+            "target/Test execution Report/**/screenshots/*"
+
+
