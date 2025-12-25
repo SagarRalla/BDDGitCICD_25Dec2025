@@ -22,6 +22,7 @@ public class DriverManager {
         {
             WebDriverManager.chromedriver().setup();
             ChromeOptions coptions = new ChromeOptions();
+            // headless mode for CI/CD run
             if (Boolean.parseBoolean(prop.getProperty("headless", "true"))){
                 coptions.addArguments("--headless");
             }
