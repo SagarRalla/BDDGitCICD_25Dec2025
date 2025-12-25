@@ -40,7 +40,8 @@ jobs:
             -DsuiteXmlFile=testng.xml \
             -Dbrowser=chrome \
             -Dheadless=true \
-            -Dmaven.test.failure.ignore=true
+            -Dmaven.test.failure.ignore=true \
+            -Duser.timezone=Asia/Kolkata
 
       - name: List target folders
         if: always()
