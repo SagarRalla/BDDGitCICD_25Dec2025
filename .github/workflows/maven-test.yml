@@ -104,19 +104,44 @@ jobs:
           echo "Tests failed; marking job as failed AFTER uploading artifacts."
           exit 1
 
-      - name: Send email
-        uses: uhg-pipelines/epl-send-mail@v1
-        with:
-          server_address: elr-smtp-relay-k8s.optum.com
-          server_port: 25
-          secure: false
-          subject: Automation Results
-          from: Github CICD Results <no_reply@optum.com>
-          to: sagar_r@optum.com
-          attachments: ${{ env.LATEST_REPORT }}
-          body: |
-            Build job of ${{ github.repository }} execution completed successfully!
-            Please find attached report for execution results from Stage.
+#   Below code is for send reports automatically to mails but this is not working
+#   because this is private action and only accessible within the UHG/Optum GitHub
+#   Enterprise organization. (project code)
+#
+#      - name: Send email
+#        uses: uhg-pipelines/epl-send-mail@v1
+#        with:
+#          server_address: elr-smtp-relay-k8s.optum.com
+#          server_port: 25
+#          secure: false
+#          subject: Automation Results
+#          from: Github CICD Results <no_reply@optum.com>
+#          to: abc@gmail.com
+#          attachments: ${{ env.LATEST_REPORT }}
+#          body: |
+#            Build job of ${{ github.repository }} execution completed successfully!
+#            Please find attached report for execution results from Stage.
+
+#                                     OR
+#
+#   Below is chatGPT code to send mail
+#
+#      - name: Send email (SMTP)
+#        if: always() && ${{ env.LATEST_REPORT != '' }}
+#        uses: dawidd6/action-send-mail@v3
+#        with:
+#          server_address: smtp.office365.com   # or smtp.gmail.com
+#          server_port: 587
+#          secure: true
+#          username: ${{ secrets.SMTP_USERNAME }}
+#          password: ${{ secrets.SMTP_PASSWORD }}
+#          from: "Github CICD Results <no_reply@optum.com>"
+#          to: "sagar_r@optum.com"
+#          subject: "Automation Results"
+#          attachments: ${{ env.LATEST_REPORT }}
+#          body: |
+#            Build job of ${{ github.repository }} execution completed successfully!
+#            Please find attached report for execution results from Stage.
 
 
 
