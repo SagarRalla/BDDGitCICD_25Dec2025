@@ -104,6 +104,20 @@ jobs:
           echo "Tests failed; marking job as failed AFTER uploading artifacts."
           exit 1
 
+      - name: Send email
+        uses: uhg-pipelines/epl-send-mail@v1
+        with:
+          server_address: elr-smtp-relay-k8s.optum.com
+          server_port: 25
+          secure: false
+          subject: Automation Results
+          from: Github CICD Results <no_reply@optum.com>
+          to: sagar_r@optum.com
+          attachments: ${{ env.LATEST_REPORT }}
+          body: |
+            Build job of ${{ github.repository }} execution completed successfully!
+            Please find attached report for execution results from Stage.
+
 
 
 
