@@ -115,7 +115,7 @@ jobs:
 #          server_port: 25
 #          secure: false
 #          subject: Automation Results
-#          from: Github CICD Results <no_reply@optum.com>
+#          from: Github CICD Results <no_reply@gmail.com>
 #          to: abc@gmail.com
 #          attachments: ${{ env.LATEST_REPORT }}
 #          body: |
@@ -135,8 +135,8 @@ jobs:
 #          secure: true
 #          username: ${{ secrets.SMTP_USERNAME }}
 #          password: ${{ secrets.SMTP_PASSWORD }}
-#          from: "Github CICD Results <no_reply@optum.com>"
-#          to: "sagar_r@optum.com"
+#          from: "Github CICD Results <no_reply@gmail.com>"
+#          to: "abc@gmail.com"
 #          subject: "Automation Results"
 #          attachments: ${{ env.LATEST_REPORT }}
 #          body: |
